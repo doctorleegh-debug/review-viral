@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>리뷰바이럴 · 오픈채팅방 인벤토리</title>
+<style>
+  :root{
+    --bg:#0f1115; --panel:#171a21; --panel2:#1d212b; --line:#2a2f3a;
+    --txt:#e7ebf1; --muted:#9aa4b2; --accent:#ffb300; --accent2:#4f8cff;
+    --ok:#34c759; --warn:#ff9f0a; --off:#8e8e93; --chip:#232834;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--txt);
+    font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR",sans-serif;
+    line-height:1.5;padding:28px 20px 60px}
+  .wrap{max-width:1180px;margin:0 auto}
+  header{display:flex;flex-wrap:wrap;align-items:baseline;gap:12px;margin-bottom:6px}
+  h1{font-size:26px;margin:0;letter-spacing:-.5px}
+  h1 .tag{font-size:12px;background:var(--accent);color:#1a1200;padding:3px 8px;border-radius:6px;vertical-align:middle;margin-left:8px;font-weight:700}
+  .sub{color:var(--muted);font-size:13px;margin-bottom:22px}
+  .stats{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0 22px}
+  .stat{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px 14px;min-width:120px}
+  .stat b{font-size:20px;display:block}
+  .stat span{font-size:12px;color:var(--muted)}
+  .controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:14px}
+  .controls label{font-size:12px;color:var(--muted);margin-right:2px}
+  select,input[type=text]{background:var(--panel2);border:1px solid var(--line);color:var(--txt);
+    border-radius:8px;padding:8px 10px;font-size:13px;outline:none}
+  input[type=text]{flex:1;min-width:180px}
+  .chiprow{display:flex;gap:6px;flex-wrap:wrap}
+  .chip{background:var(--chip);border:1px solid var(--line);color:var(--muted);border-radius:20px;
+    padding:6px 12px;font-size:12px;cursor:pointer;user-select:none;transition:.15s}
+  .chip.on{background:var(--accent);color:#1a1200;border-color:var(--accent);font-weight:700}
+  .btn{background:var(--accent2);border:none;color:#fff;border-radius:8px;padding:8px 14px;font-size:13px;cursor:pointer;font-weight:600}
+  .btn.ghost{background:transparent;border:1px solid var(--line);color:var(--muted)}
+  table{width:100%;border-collapse:collapse;background:var(--panel);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+  thead th{background:var(--panel2);text-align:left;font-size:12px;color:var(--muted);
+    padding:12px 12px;border-bottom:1px solid var(--line);white-space:nowrap;position:sticky;top:0}
+  tbody td{padding:12px;border-bottom:1px solid var(--line);font-size:13px;vertical-align:top}
+  tbody tr:last-child td{border-bottom:none}
+  tbody tr:hover{background:#1b2029}
+  .name{font-weight:700;font-size:14px}
+  .name .self{font-size:11px;background:#3a2f00;color:var(--accent);padding:2px 6px;border-radius:5px;margin-left:6px}
+  .link a{color:var(--accent2);text-decoration:none;font-size:12px;word-break:break-all}
+  .link a:hover{text-decoration:underline}
+  .pill{display:inline-block;font-size:11px;padding:3px 9px;border-radius:20px;font-weight:700;white-space:nowrap}
+  .pill.리뷰{background:#3a2f00;color:#ffd27a}
+  .pill.인스타{background:#2a1f3a;color:#e0b3ff}
+  .pill.유튜브{background:#3a1f1f;color:#ff9a9a}
+  .pill.블로그{background:#1f2f3a;color:#9ad1ff}
+  .pill.종합{background:#1f3a2a;color:#9affc0}
+  .pill.카톡{background:#3a3a1f;color:#f5f59a}
+  .pill.당근{background:#1f3a3a;color:#9afff5}
+  .pill.카페{background:#2a2a2a;color:#ddd}
+  .st{display:inline-block;font-size:11px;padding:3px 9px;border-radius:6px;font-weight:700;white-space:nowrap}
+  .st.참여중{background:rgba(52,199,89,.15);color:var(--ok)}
+  .st.조사중{background:rgba(255,159,10,.15);color:var(--warn)}
+  .st.대기{background:rgba(142,142,147,.2);color:var(--off)}
+  .st.완료{background:rgba(79,140,255,.15);color:var(--accent2)}
+  .plat{font-size:12px;color:var(--muted)}
+  .note{font-size:12px;color:var(--muted)}
+  .empty{text-align:center;color:var(--muted);padding:30px !important}
+  h2{font-size:18px;margin:34px 0 12px;border-left:3px solid var(--accent);padding-left:10px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px;margin-bottom:12px}
+  .card h3{margin:0 0 8px;font-size:15px}
+  .card p,.card li{font-size:13px;color:var(--muted);margin:6px 0}
+  .card code{background:var(--panel2);padding:2px 6px;border-radius:5px;font-size:12px;color:var(--txt)}
+  .tmpl{background:var(--panel2);border:1px dashed var(--line);border-radius:8px;padding:12px;font-size:13px;
+    color:var(--txt);white-space:pre-wrap;margin-top:8px}
+  .foot{margin-top:40px;font-size:11px;color:var(--off);text-align:center}
+  .count{font-size:12px;color:var(--muted);margin-bottom:8px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>리뷰바이럴 <span class="tag">오픈채팅방 인벤토리</span></h1>
+  </header>
+  <div class="sub">뷰티블라썸의원 · 상호 리뷰/SNS 품앗이 오픈채팅방 정리 · 실행 시 한 번에 찾아가기용 · 2026-11-05 조사 기준</div>
+
+  <div class="stats" id="stats"></div>
+
+  <div class="controls">
+    <div>
+      <label>검색</label><br>
+      <input type="text" id="q" placeholder="방 이름 / 링크 / 비고 검색…">
+    </div>
+    <div>
+      <label>유형</label><br>
+      <select id="f-type">
+        <option value="">전체</option>
+        <option>리뷰</option><option>인스타</option><option>유튜브</option>
+        <option>블로그</option><option>종합</option>
+      </select>
+    </div>
+    <div>
+      <label>채널</label><br>
+      <select id="f-chan">
+        <option value="">전체</option>
+        <option>카톡</option><option>당근</option><option>카페</option>
+      </select>
+    </div>
+    <div>
+      <label>상태</label><br>
+      <select id="f-status">
+        <option value="">전체</option>
+        <option>참여중</option><option>조사중</option><option>대기</option><option>완료</option>
+      </select>
+    </div>
+    <button class="btn ghost" id="reset">초기화</button>
+    <div class="chiprow" id="typechips"></div>
+  </div>
+
+  <div class="count" id="count"></div>
+  <table>
+    <thead>
+      <tr>
+        <th>방 이름</th><th>유형</th><th>채널</th><th>타겟 플랫폼</th>
+        <th>링크 / 접근</th><th>상태</th><th>비고</th>
+      </tr>
+    </thead>
+    <tbody id="rows"></tbody>
+  </table>
+
+  <h2>진행 가이드 (상호 리뷰 품앗이)</h2>
+  <div class="card">
+    <h3>1) 방 진입</h3>
+    <p>카톡 <b>오픈채팅 탭 → 검색창</b>에 키워드 입력. 확인된 키워드: <code>리뷰</code> <code>리뷰 품앗이</code> <code>인스타 품앗이</code> <code>인스타 좋아요 품앗이</code> <code>유튜브 품앗이</code> <code>맞팔</code> <code>네이버 예약후기</code>. 링크 공유방은 <code>open.kakao.com/o/…</code>을 카톡에서 열면 참여 화면으로 이동.</p>
+  </div>
+  <div class="card">
+    <h3>2) 자기 정보 + 리뷰 요청 올리기</h3>
+    <p>방에 "우리 사업장 + 어떤 플랫폼 리뷰를 요청하는지 + 대신 그쪽 리뷰를 달아준다"는 내용을 올림. 아래 템플릿 사용.</p>
+  </div>
+  <div class="card">
+    <h3>3) 상호 매칭 → 리뷰 작성</h3>
+    <p>상대방이 우리 리뷰를 달아주고, 우리는 그쪽 사업장 리뷰를 달아줌. 1:1 채팅으로 매칭되는 방도 있음. 각 플랫폼별 작성 방법은 아래 참고.</p>
+  </div>
+  <div class="card">
+    <h3>4) 완료 확인</h3>
+    <p>리뷰가 실제 노출되는지 각 플랫폼에서 확인 후 방에 "완료/감사" 표시. 정산이 있는 방(영수증 리뷰)은 2주 단위 정산 공지 확인.</p>
+  </div>
+
+  <h2>플랫폼별 리뷰 작성 방법</h2>
+  <div class="card">
+    <h3>카카오맵 (카톡 계정 연동)</h3>
+    <p>카카오맵에서 사업장 검색 → <b>리뷰 작성</b>. 영수증 불필요. 카톡 계정으로 작성.</p>
+  </div>
+  <div class="card">
+    <h3>구글 (구글 지도)</h3>
+    <p>구글 지도에서 사업장 → <b>리뷰 작성</b>. 구글 계정으로. GBP "리뷰 요청" 링크로 상대에게도 요청 가능.</p>
+  </div>
+  <div class="card">
+    <h3>네이버 (플레이스/지도)</h3>
+    <p>네이버 플레이스에서 사업장 → 리뷰. 일부는 <b>영수증/방문 인증</b> 필요. 예약 후 "이용완료" 처리 시 리뷰 가능한 구조(미용실·뷰티 등).</p>
+  </div>
+
+  <h2>요청 문구 템플릿</h2>
+  <div class="card">
+    <h3>방에 올릴 리뷰 요청</h3>
+    <div class="tmpl">안녕하세요! 서울 뷰티블라썸의원(피부과)입니다.
+구글 / 네이버 / 카카오맵 리뷰 부탁드려요.
+대신 저희가 해당 사업장 리뷰 꼭 달아드릴게요.
+계정/사업장 이름(또는 링크) 알려주시면 바로 진행할게요 🙏</div>
+  </div>
+  <div class="card">
+    <h3>SNS 품앗이 요청 (인스타/유튜브)</h3>
+    <div class="tmpl">안녕하세요! 뷰티블라썸의원입니다.
+인스타(또는 유튜브) 서로 팔로우·좋아요·조회수 품앗이해요.
+저희 계정: @뷰티블라썸의원
+상대 계정 알려주시면 바로 진행할게요!</div>
+  </div>
+
+  <div class="foot">리뷰바이럴 · 로컬 인벤토리 · 링크는 공개 오픈채팅/카페 주소 · 상태는 수동 업데이트</div>
+</div>
+
+<script>
+const ROOMS = [
+  {name:"품앗이 천국", type:"종합", chan:"카톡", plat:"유튜브·인스타·틱톡·페이스북·블로그·스마트스토어·체험단·리뷰어",
+   link:"https://open.kakao.com/o/gBzgVtGf", cafe:"https://cafe.naver.com/mvlovecafe",
+   status:"조사중", note:"SNS 채널 종합 품앗이. 카페+오픈채팅 병행. 리뷰어·체험단 포함."},
+  {name:"인스타 팔로우+좋아요 카톡방", type:"인스타", chan:"카톡", plat:"인스타그램",
+   link:"https://open.kakao.com/o/gI7F54gf", status:"조사중", note:"서로 팔로우+좋아요 품앗이. 공개 공유 링크."},
+  {name:"블로그 라이프", type:"블로그", chan:"카톡", plat:"블로그",
+   link:"https://open.kakao.com/o/gNDVQ1Qg", status:"조사중", note:"블로그 꿀팁/이웃·조회 품앗이."},
+  {name:"네이버예약후기 품앗이 (당근)", type:"리뷰", chan:"당근", plat:"네이버 플레이스",
+   link:"https://www.daangn.com/kr/group/네이버예약후기-품앗이-xzbfkajriani/post/", status:"조사중",
+   note:"네이버 예약후기 품앗이. 당근 모임(지역: 부산 명지동 기준, 지역별 유사 모임 다수)."},
+  {name:"우리 인스타 맞팔룸 (기존 참여)", type:"인스타", chan:"카톡", plat:"인스타그램",
+   link:"(카톡 채팅 목록 맨 위)", self:true, status:"참여중",
+   note:"이미 참여중. 실시간 활발: '맞팔 100% 갑니다'·인스타 프로필 링크 공유→서로 팔로우/좋아요."},
+  {name:"리뷰 품앗이 방 (카톡 '리뷰' 검색)", type:"리뷰", chan:"카톡", plat:"네이버·쿠팡·당근·카카오톡 선물하기",
+   link:"(카톡 오픈채팅 검색: '리뷰')", status:"대기",
+   note:"한국경제 보도: 카톡 오픈채팅 검색창 '리뷰' 입력 시 리뷰 품앗이 방 다수 노출. 직접 진입 후 확인 필요."},
+  {name:"미용실·뷰티 예약 리뷰 품앗이 방", type:"리뷰", chan:"카톡", plat:"네이버 플레이스(예약후기)",
+   link:"(카톡 오픈채팅 검색: '미용실 리뷰'/'예약후기')", status:"대기",
+   note:"예약→이용완료→후기 구조. 1:1 매칭. 뷰티 업종과 유사."},
+  {name:"r/googlereviewexchange", type:"리뷰", chan:"카페", plat:"구글 비즈니스 프로파일",
+   link:"https://www.reddit.com/r/googlereviewexchange/", status:"조사중", note:"해외. 구글 리뷰 스왑."},
+  {name:"r/ReviewTrading", type:"리뷰", chan:"카페", plat:"구글",
+   link:"https://www.reddit.com/r/ReviewTrading/", status:"조사중", note:"해외. 리뷰 교환."}
+];
+
+const TYPE_LABEL = {리뷰:"리뷰",인스타:"인스타",유튜브:"유튜브",블로그:"블로그",종합:"종합"};
+const rowsEl = document.getElementById('rows');
+const qEl = document.getElementById('q');
+const fType = document.getElementById('f-type');
+const fChan = document.getElementById('f-chan');
+const fStatus = document.getElementById('f-status');
+const chipsEl = document.getElementById('typechips');
+let activeTypes = new Set();
+
+// build type chips
+Object.keys(TYPE_LABEL).forEach(t=>{
+  const c=document.createElement('span');c.className='chip';c.textContent=t;
+  c.onclick=()=>{ if(activeTypes.has(t)){activeTypes.delete(t);c.classList.remove('on');}
+    else{activeTypes.add(t);c.classList.add('on');} render(); };
+  chipsEl.appendChild(c);
+});
+
+function esc(s){return String(s).replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));}
+
+function render(){
+  const q=qEl.value.trim().toLowerCase();
+  const ft=fType.value, fc=fChan.value, fs=fStatus.value;
+  const list=ROOMS.filter(r=>{
+    if(ft && r.type!==ft) return false;
+    if(fc && r.chan!==fc) return false;
+    if(fs && r.status!==fs) return false;
+    if(activeTypes.size && !activeTypes.has(r.type)) return false;
+    if(q){
+      const hay=(r.name+' '+(r.link||'')+' '+(r.note||'')+' '+(r.cafe||'')+' '+r.plat).toLowerCase();
+      if(!hay.includes(q)) return false;
+    }
+    return true;
+  });
+  rowsEl.innerHTML='';
+  if(!list.length){
+    rowsEl.innerHTML='<tr><td colspan="7" class="empty">조건에 맞는 방이 없습니다.</td></tr>';
+  } else {
+    list.forEach(r=>{
+      const tr=document.createElement('tr');
+      const nameCell = r.name + (r.self?'<span class="self">기존 참여</span>':'');
+      const linkCell = (r.link&&r.link.startsWith('http'))
+        ? `<a href="${esc(r.link)}" target="_blank" rel="noopener">${esc(r.link)}</a>`
+        : `<span class="note">${esc(r.link)}</span>`;
+      const cafeCell = r.cafe?`<br><a href="${esc(r.cafe)}" target="_blank" rel="noopener" style="color:var(--muted);font-size:11px">카페: ${esc(r.cafe)}</a>`:'';
+      tr.innerHTML=`
+        <td class="name">${nameCell}</td>
+        <td><span class="pill ${esc(r.type)}">${esc(r.type)}</span></td>
+        <td><span class="pill ${esc(r.chan)}">${esc(r.chan)}</span></td>
+        <td class="plat">${esc(r.plat)}</td>
+        <td class="link">${linkCell}${cafeCell}</td>
+        <td><span class="st ${esc(r.status)}">${esc(r.status)}</span></td>
+        <td class="note">${esc(r.note)}</td>`;
+      rowsEl.appendChild(tr);
+    });
+  }
+  document.getElementById('count').textContent=`총 ${ROOMS.length}건 중 ${list.length}건 표시`;
+  // stats
+  const by={};ROOMS.forEach(r=>by[r.status]=(by[r.status]||0)+1);
+  document.getElementById('stats').innerHTML=
+    `<div class="stat"><b>${ROOMS.length}</b><span>총 방</span></div>`+
+    Object.entries(by).map(([k,v])=>`<div class="stat"><b>${v}</b><span>${k}</span></div>`).join('');
+}
+[qEl,fType,fChan,fStatus].forEach(el=>el.addEventListener('input',render));
+document.getElementById('reset').onclick=()=>{
+  qEl.value='';fType.value='';fChan.value='';fStatus.value='';
+  activeTypes.clear();document.querySelectorAll('.chip').forEach(c=>c.classList.remove('on'));render();
+};
+render();
+</script>
+</body>
+</html>
