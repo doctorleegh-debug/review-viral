@@ -175,6 +175,7 @@
   <div class="card">
     <p style="font-size:12px;color:var(--off);margin-top:0">이 페이지는 리뷰바이럴 프로젝트의 영구 워크로그다. 새 항목은 아래에 추가(최신 상단).</p>
     <ul id="worklog" style="margin:8px 0 0;padding-left:18px">
+      <li><b>2026-11-06 · v3</b> — 네이버블로그/인스타/영수증리뷰 탭 조사. 블로그 2개(1일1포·문사부), 인스타 1개(맞팔 좋반 댓반) 신규 발견. 영수증리뷰 활성 방 미발견. 총 13개 방 기록. 시트 3개 탭 + GitHub Pages 갱신.</li>
       <li><b>2026-11-06 · v2</b> — 시트 기록 완료: Orca helper로 Google 시트(gid=0) A1:J11에 10개 방 기록(헤더+데이터). 갭 정리(4행·5행·12행) 후 A1:J11 연속 확인. open.kakao.com 링크 10개 웹 검색으로 직접 추출. 인스타 맞팔 방(참여중, 1062+) 포함.</li>
       <li><b>2026-11-05 · v1</b> — 오픈채팅방 인벤토리 최초 작성. 방 9건 + 필터 + 진행 가이드 + 플랫폼별 방법 + 요청 템플릿. GitHub Pages 공개 배포.</li>
     </ul>
@@ -214,7 +215,16 @@ const ROOMS = [
    note:"네이버 맛집랭킹/카카오맵 맛집랭킹 진입. 키워드/사진/길찾기 설계."},
   {name:"카카오맵 리뷰 문의 (eth1020)", type:"리뷰", chan:"카톡", plat:"카카오맵",
    link:"https://open.kakao.com/o/sULM7Gri", status:"대기",
-   note:"카카오맵 리뷰 건당 1200원 + 이미지 추가. 대행사."}
+   note:"카카오맵 리뷰 건당 1200원 + 이미지 추가. 대행사."},
+  {name:"1일1포 :: 블로그 포스팅 클립 품앗이", type:"블로그", chan:"카톡", plat:"네이버 블로그",
+   link:"https://open.kakao.com/o/gUB1V3pc", status:"대기",
+   note:"블로그 포스팅 클립 공유 + 이웃/공감/댓글 품앗이. 1일1포스트 기반."},
+  {name:"문사부 블로그 수익화 노하우", type:"블로그", chan:"카톡", plat:"네이버 블로그",
+   link:"https://open.kakao.com/o/gadNP6Vh", status:"대기",
+   note:"블로그 수익화 노하우 공유 + 품앗이. 수익화 교육 겸."},
+  {name:"인스타 맞팔 좋반 댓반 맞구독 품앗이방", type:"인스타", chan:"카톡", plat:"인스타그램",
+   link:"https://open.kakao.com/o/gkqWbYie", status:"대기",
+   note:"인스타 맞팔 + 좋아요/댓글 반격 + 맞구독 품앗이. 좋반/댓반 포함."}
 ];
 
 const TYPE_LABEL = {리뷰:"리뷰",인스타:"인스타",유튜브:"유튜브",블로그:"블로그",종합:"종합"};
