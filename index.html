@@ -77,7 +77,7 @@
   <header>
     <h1>리뷰바이럴 <span class="tag">오픈채팅방 인벤토리</span></h1>
   </header>
-  <div class="sub">뷰티블라썸의원 · 상호 리뷰/SNS 품앗이 오픈채팅방 정리 · 실행 시 한 번에 찾아가기용 · 2026-11-05 조사 기준</div>
+  <div class="sub">뷰티블라썸의원 · 상호 리뷰/SNS 품앗이 오픈채팅방 정리 · 실행 시 한 번에 찾아가기용 · 2026-11-06 시트 기록 기준</div>
 
   <div class="stats" id="stats"></div>
 
@@ -175,7 +175,8 @@
   <div class="card">
     <p style="font-size:12px;color:var(--off);margin-top:0">이 페이지는 리뷰바이럴 프로젝트의 영구 워크로그다. 새 항목은 아래에 추가(최신 상단).</p>
     <ul id="worklog" style="margin:8px 0 0;padding-left:18px">
-      <li><b>2026-11-05 · v1</b> — 오픈채팅방 인벤토리 최초 작성. 방 9건(품앗이 천국·인스타 맞팔룸·블로그 라이프·당근 네이버예약후기·카톡 '리뷰' 검색·미용실/뷰티 예약리뷰·reddit 2) + 필터(유형/채널/상태/검색) + 진행 가이드 + 플랫폼별 방법 + 요청 템플릿. GitHub Pages 공개 배포.</li>
+      <li><b>2026-11-06 · v2</b> — 시트 기록 완료: Orca helper로 Google 시트(gid=0) A1:J11에 10개 방 기록(헤더+데이터). 갭 정리(4행·5행·12행) 후 A1:J11 연속 확인. open.kakao.com 링크 10개 웹 검색으로 직접 추출. 인스타 맞팔 방(참여중, 1062+) 포함.</li>
+      <li><b>2026-11-05 · v1</b> — 오픈채팅방 인벤토리 최초 작성. 방 9건 + 필터 + 진행 가이드 + 플랫폼별 방법 + 요청 템플릿. GitHub Pages 공개 배포.</li>
     </ul>
   </div>
 
@@ -184,29 +185,36 @@
 
 <script>
 const ROOMS = [
-  {name:"품앗이 천국", type:"종합", chan:"카톡", plat:"유튜브·인스타·틱톡·페이스북·블로그·스마트스토어·체험단·리뷰어",
-   link:"https://open.kakao.com/o/gBzgVtGf", cafe:"https://cafe.naver.com/mvlovecafe",
-   status:"조사중", note:"SNS 채널 종합 품앗이. 카페+오픈채팅 병행. 리뷰어·체험단 포함."},
-  {name:"인스타 팔로우+좋아요 카톡방", type:"인스타", chan:"카톡", plat:"인스타그램",
-   link:"https://open.kakao.com/o/gI7F54gf", status:"조사중", note:"서로 팔로우+좋아요 품앗이. 공개 공유 링크."},
-  {name:"블로그 라이프", type:"블로그", chan:"카톡", plat:"블로그",
-   link:"https://open.kakao.com/o/gNDVQ1Qg", status:"조사중", note:"블로그 꿀팁/이웃·조회 품앗이."},
-  {name:"네이버예약후기 품앗이 (당근)", type:"리뷰", chan:"당근", plat:"네이버 플레이스",
-   link:"https://www.daangn.com/kr/group/네이버예약후기-품앗이-xzbfkajriani/post/", status:"조사중",
-   note:"네이버 예약후기 품앗이. 당근 모임(지역: 부산 명지동 기준, 지역별 유사 모임 다수)."},
-  {name:"우리 인스타 맞팔룸 (기존 참여)", type:"인스타", chan:"카톡", plat:"인스타그램",
-   link:"(카톡 채팅 목록 맨 위)", self:true, status:"참여중",
-   note:"이미 참여중. 실시간 활발: '맞팔 100% 갑니다'·인스타 프로필 링크 공유→서로 팔로우/좋아요."},
-  {name:"리뷰 품앗이 방 (카톡 '리뷰' 검색)", type:"리뷰", chan:"카톡", plat:"네이버·쿠팡·당근·카카오톡 선물하기",
-   link:"(카톡 오픈채팅 검색: '리뷰')", status:"대기",
-   note:"한국경제 보도: 카톡 오픈채팅 검색창 '리뷰' 입력 시 리뷰 품앗이 방 다수 노출. 직접 진입 후 확인 필요."},
-  {name:"미용실·뷰티 예약 리뷰 품앗이 방", type:"리뷰", chan:"카톡", plat:"네이버 플레이스(예약후기)",
-   link:"(카톡 오픈채팅 검색: '미용실 리뷰'/'예약후기')", status:"대기",
-   note:"예약→이용완료→후기 구조. 1:1 매칭. 뷰티 업종과 유사."},
-  {name:"r/googlereviewexchange", type:"리뷰", chan:"카페", plat:"구글 비즈니스 프로파일",
-   link:"https://www.reddit.com/r/googlereviewexchange/", status:"조사중", note:"해외. 구글 리뷰 스왑."},
-  {name:"r/ReviewTrading", type:"리뷰", chan:"카페", plat:"구글",
-   link:"https://www.reddit.com/r/ReviewTrading/", status:"조사중", note:"해외. 리뷰 교환."}
+  {name:"인스타 맞팔·팔로워·좋아요 품앗이방", type:"인스타", chan:"카톡", plat:"인스타그램",
+   link:"(오픈채팅 목록)", self:true, status:"참여중",
+   note:"매우 활발(멤버 1062+, 실시간 증가). 신규계·광고계 불가. 맞팔 요청 실시간 유입."},
+  {name:"품앗이천국 (모든채널 품앗이)", type:"종합", chan:"카톡", plat:"블로그·인스타·틱톡·스마트스토어·체험단·리뷰어",
+   link:"https://open.kakao.com/o/gBzgVtGf", status:"대기",
+   note:"모든 채널 품앗이. 서이추(서로 이웃추천) 포함."},
+  {name:"🔥마케팅1위🔥인스타팔로워좋아요•유튜브구독자조회수", type:"인스타", chan:"카톡", plat:"인스타그램·유튜브",
+   link:"https://open.kakao.com/o/sS7nZq2b", status:"대기",
+   note:"인스타 팔로워/좋아요 + 유튜브 구독자/조회수 품앗이. 1:1 채팅."},
+  {name:"스마트스토어 & 플레이스 & 쿠팡 품앗이 톡방", type:"리뷰", chan:"카톡", plat:"스마트스토어·플레이스·쿠팡",
+   link:"https://open.kakao.com/o/gmWaeBtf", status:"대기",
+   note:"431명, 자유입장. 스토어 링크 올리면 알아서 품앗이(알받/상품찜)."},
+  {name:"카카오맵 맛집 문의", type:"리뷰", chan:"카톡", plat:"카카오맵",
+   link:"https://open.kakao.com/o/s8SuBXei", status:"대기",
+   note:"카카오맵 리뷰/맛집 랭킹 프로모션. 맛집 전용."},
+  {name:"리뷰체험단", type:"리뷰", chan:"카톡", plat:"토스·에이블리·지그재그·무신사·네이버·쿠팡",
+   link:"https://open.kakao.com/o/swQ0ixWf", status:"대기",
+   note:"3500+리뷰어. 대행사 환영."},
+  {name:"흐름컴퍼니 광고문의방", type:"리뷰", chan:"카톡", plat:"쿠팡·네이버",
+   link:"https://open.kakao.com/o/g4KvwBJi", status:"대기",
+   note:"쿠팡/네이버 리뷰/트래픽/블로그 배포. 리뷰/트래픽 전문."},
+  {name:"크레이지애드 (카카오맵 순위상승)", type:"리뷰", chan:"카톡", plat:"카카오맵",
+   link:"https://open.kakao.com/o/suYtY1Xg", status:"대기",
+   note:"카카오맵 리뷰(일반1700원/포토2200원) + 유입. 개발사 직접."},
+  {name:"N커머스 (플레이스 랭킹)", type:"리뷰", chan:"카톡", plat:"네이버·카카오맵",
+   link:"https://open.kakao.com/o/sZtWfTJh", status:"대기",
+   note:"네이버 맛집랭킹/카카오맵 맛집랭킹 진입. 키워드/사진/길찾기 설계."},
+  {name:"카카오맵 리뷰 문의 (eth1020)", type:"리뷰", chan:"카톡", plat:"카카오맵",
+   link:"https://open.kakao.com/o/sULM7Gri", status:"대기",
+   note:"카카오맵 리뷰 건당 1200원 + 이미지 추가. 대행사."}
 ];
 
 const TYPE_LABEL = {리뷰:"리뷰",인스타:"인스타",유튜브:"유튜브",블로그:"블로그",종합:"종합"};
